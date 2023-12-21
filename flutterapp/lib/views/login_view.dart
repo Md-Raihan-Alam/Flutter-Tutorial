@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import '../firebase_options.dart';
-// import 'dart:developer' as devtools show log;
+import 'dart:developer' as devtools show log;
 
 import 'package:flutterapp/constants/routes.dart';
+import 'package:flutterapp/services/auth/auth_exceptions.dart';
+import 'package:flutterapp/services/auth/auth_service.dart';
 
 import '../utilities/show_error_dialog.dart';
 
@@ -18,6 +21,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+
+  get devtools => null;
   @override
   void initState() {
     _email = TextEditingController();
@@ -68,13 +73,20 @@ class _LoginViewState extends State<LoginView> {
                 //   email: email,
                 //   password: password,
                 // );
-                // devtools.log(userCredential.toString());
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                // (userCredential.toString());
+                // await FirebaseAuth.instance.signInWithEmailAndPassword(
+                //   email: email,
+                //   password: password,
+                // );
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                // final user = FirebaseAuth.instance.currentUser;
+                final user = AuthService.firebase().currentUser;
+                // (user);
+                // if (user?.emailVerified ?? false) {
+                if (user?.isEmailVerified ?? false) {
                   //user's email is verified
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
@@ -87,38 +99,59 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == "user-not-found") {
-                  // devtools.log("user not found");
-                  await showErrorDialog(
-                    context,
-                    "User not found",
-                  );
-                } else if (e.code == "wrong-password") {
-                  await showErrorDialog(
-                    context,
-                    "Wrong Password",
-                  );
-                  // devtools.log("wrong password");
-                } else if (e.code == "invalid-email") {
-                  await showErrorDialog(
-                    context,
-                    "Invalid Email",
-                  );
-                  // devtools.log("Invalid Email");
-                } else {
-                  await showErrorDialog(
-                    context,
-                    "Error:${e.code}",
-                  );
-                }
-                // print(e.code);
-              } catch (e) {
+              } on UserNotFoundAuthExcption {
                 await showErrorDialog(
                   context,
-                  "Error:${e.toString()}",
+                  "User not found",
+                );
+              } on WrongPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  "Wrong Password",
+                );
+              } on InvalidEmailAuthException {
+                await showErrorDialog(
+                  context,
+                  "Invalid Email",
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  "Authentication Error",
                 );
               }
+              // on FirebaseAuthException catch (e) {
+              //   if (e.code == "user-not-found") {
+              //     // ("user not found");
+              //     // await showErrorDialog(
+              //     //   context,
+              //     //   "User not found",
+              //     // );
+              //   } else if (e.code == "wrong-password") {
+              //     await showErrorDialog(
+              //       context,
+              //       "Wrong Password",
+              //     );
+              //     // ("wrong password");
+              //   } else if (e.code == "invalid-email") {
+              //     await showErrorDialog(
+              //       context,
+              //       "Invalid Email",
+              //     );
+              //     // ("Invalid Email");
+              //   } else {
+              //     await showErrorDialog(
+              //       context,
+              //       "Error:${e.code}",
+              //     );
+              //   }
+              //   // print(e.code);
+              // } catch (e) {
+              //   await showErrorDialog(
+              //     context,
+              //     "Error:${e.toString()}",
+              //   );
+              // }
             },
             child: const Text("Login"),
           ),
