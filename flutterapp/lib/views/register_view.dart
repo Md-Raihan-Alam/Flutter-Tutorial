@@ -68,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
                 //supersaiyan033@gmail.com
                 //raihan12345
                 //davidshank221066@gmail.com
-                //david12345
+                //secret
                 await AuthService.firebase()
                     .createUser(email: email, password: password);
                 // await FirebaseAuth.instance.createUserWithEmailAndPassword(
