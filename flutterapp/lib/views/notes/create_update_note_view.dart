@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutterapp/services/auth/auth_service.dart';
 import 'package:flutterapp/services/crud/notes_service.dart';
 import 'package:flutterapp/utilities/generics/get_arguments.dart';
+import 'package:flutterapp/services/cloud/cloud_note.dart';
+import 'package:flutterapp/services/cloud/cloud_storage_constants.dart';
+import 'package:flutterapp/services/cloud/firebase_cloud_storage.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({super.key});
@@ -11,24 +14,35 @@ class CreateUpdateNoteView extends StatefulWidget {
 }
 
 class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
-  DatabaseNote? _note;
-  late final NotesService _notesService;
+  // DatabaseNote? _note;
+  CloudNote? _note;
+  // late final NotesService _notesService;
+  late final FirebaseCloudStorage _notesService;
   late final TextEditingController _textController;
 
   @override
   void initState() {
-    _notesService = NotesService();
+    // _notesService = NotesService();
+    _notesService = FirebaseCloudStorage();
     _textController = TextEditingController();
     super.initState();
   }
 
+  // void _textContollerListener() async {
+  //   final note = _note;
+  //   if (note == null) {
+  //     return;
+  //   }
+  //   final text = _textController.text;
+  //   await _notesService.updateNote(note: note, text: text);
+  // }
   void _textContollerListener() async {
     final note = _note;
     if (note == null) {
       return;
     }
     final text = _textController.text;
-    await _notesService.updateNote(note: note, text: text);
+    await _notesService.updateNote(documentId: note.documentId, text: text);
   }
 
   void _setupTextContollerListener() {
@@ -36,8 +50,11 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     _textController.addListener(_textContollerListener);
   }
 
-  Future<DatabaseNote> createOrGetExistingNote(BuildContext context) async {
-    final widgetNote = context.getArgument<DatabaseNote>();
+  Future<CloudNote> createOrGetExistingNote(BuildContext context) async {
+    // Future<DatabaseNote> createOrGetExistingNote(BuildContext context) async {
+
+    // final widgetNote = context.getArgument<DatabaseNote>();
+    final widgetNote = context.getArgument<CloudNote>();
     if (widgetNote != null) {
       _note = widgetNote;
       _textController.text = widgetNote.text;
@@ -48,25 +65,43 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
       return existingNote;
     }
     final currentUser = AuthService.firebase().currentUser!;
-    final email = currentUser.email!;
-    final owner = await _notesService.getUser(email: email);
-    final newNote = await _notesService.createNote(owner: owner);
+    // final email = currentUser.email;
+    final userId = currentUser.id;
+    final newNote = await _notesService.createNewNote(ownerUserId: userId);
+    // final owner = await _notesService.getUser(email: email);
+    // final newNote = await _notesService.createNote(owner: owner);
     _note = newNote;
     return newNote;
   }
 
+  // void _deleteNoteIfTextIsEmpty() {
+  //   final note = _note;
+  //   if (_textController.text.isEmpty && note != null) {
+  //     _notesService.deleteNote(id: note.id);
+  //   }
+  // }
   void _deleteNoteIfTextIsEmpty() {
     final note = _note;
     if (_textController.text.isEmpty && note != null) {
-      _notesService.deleteNote(id: note.id);
+      _notesService.deleteNote(documentId: note.documentId);
     }
   }
 
+  // void _saveNoteIfTextNotEmpty() async {
+  //   final note = _note;
+  //   final text = _textController.text;
+  //   if (note != null && text.isNotEmpty) {
+  //     await _notesService.updateNote(note: note, text: text);
+  //   }
+  // }
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
     if (note != null && text.isNotEmpty) {
-      await _notesService.updateNote(note: note, text: text);
+      await _notesService.updateNote(
+        documentId: note.documentId,
+        text: text,
+      );
     }
   }
 
