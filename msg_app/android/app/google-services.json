@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911631515116",
+    "project_id": "msg-app-f90b0",
+    "storage_bucket": "msg-app-f90b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911631515116:android:b01b8d665ef4f4b4db14c9",
+        "android_client_info": {
+          "package_name": "com.example.msg_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcEzJxO7n-MH6trtgYK0bBa3DmtPZypo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
