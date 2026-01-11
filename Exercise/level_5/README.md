@@ -1,16 +1,60 @@
-# level_5
+# 🚀 LEVEL 5 — Lists, ListTile & State Update
 
-A new Flutter project.
+This level introduces **ListView**, **ListTile**, and dynamic state updates — very important Flutter concepts.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## **LEVEL 5 TASK**
 
-A few resources to get you started if this is your first Flutter project:
+### 🎯 Objective
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Display a list of items and update the UI dynamically.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+### **Requirements**
+
+1. Create a list of strings:
+
+   ```dart
+   ["Apple", "Banana", "Orange"]
+   ```
+
+2. Display them using a **ListView**.
+
+3. Each item must be displayed using **ListTile**.
+
+4. When a list item is tapped:
+
+   - Update a `Text` widget at the top to show:
+
+     ```
+     Selected: Apple
+     ```
+
+     (based on tapped item)
+
+5. Use `setState` to update the selected value.
+
+---
+
+### **Widgets you MUST use**
+
+- ListView
+- ListTile
+- Text
+- Column
+- setState
+
+---
+
+### **Scoring (10 points)**
+
+| Requirement                 | Points |
+| --------------------------- | ------ |
+| ListView displays all items | 3      |
+| ListTile used correctly     | 2      |
+| Tap updates selected text   | 3      |
+| Proper layout structure     | 2      |
+
+---
